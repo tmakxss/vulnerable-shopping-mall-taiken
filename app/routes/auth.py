@@ -36,12 +36,12 @@ def login():
                 session['is_admin'] = is_admin
                 session['role'] = role  # 役割情報もセッションに保存
                 
-                # 脆弱なCookie設定
+                # 脆弱なCookie設定（HTTPOnly属性なし）
                 response = make_response(redirect('/'))
-                response.set_cookie('user_id', str(user_data.get('id')), max_age=3600)
-                response.set_cookie('username', user_data.get('username'), max_age=3600)
-                response.set_cookie('is_admin', str(is_admin), max_age=3600)
-                response.set_cookie('role', role, max_age=3600)
+                response.set_cookie('user_id', str(user_data.get('id')), max_age=3600, httponly=False)
+                response.set_cookie('username', user_data.get('username'), max_age=3600, httponly=False)
+                response.set_cookie('is_admin', str(is_admin), max_age=3600, httponly=False)
+                response.set_cookie('role', role, max_age=3600, httponly=False)
                 
                 # 脆弱なJWT風トークン (Base64エンコード)
                 token_data = {
@@ -51,7 +51,7 @@ def login():
                     'role': role
                 }
                 token = base64.b64encode(json.dumps(token_data).encode()).decode()
-                response.set_cookie('auth_token', token, max_age=3600)
+                response.set_cookie('auth_token', token, max_age=3600, httponly=False)
                 
                 flash('ログインしました', 'success')
                 return response
