@@ -11,6 +11,9 @@ def create_app():
     # 環境変数から秘密鍵を取得（本番環境では適切な値を設定）
     app.secret_key = os.getenv('SECRET_KEY', 'vulnerable_shop_secret_key_12345')
     
+    # セッションCookieのHTTPOnly属性を無効化（脆弱性）
+    app.config['SESSION_COOKIE_HTTPONLY'] = False
+    
     # セキュリティ警告の設定
     app.config['SECURITY_WARNING'] = True
     app.config['EDUCATIONAL_USE_ONLY'] = True
